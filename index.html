@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>UniLibrary – University Book Catalog</title>
+  <meta name="description" content="Browse, search, and filter thousands of books scraped live from Books to Scrape. Your university's digital book catalog." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;900&family=Inter:wght@300;400;500;600&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- ══ PARTICLES CANVAS ══ -->
+  <canvas id="particles-canvas"></canvas>
+
+  <!-- ══ NAVBAR ══ -->
+  <nav class="navbar" id="navbar">
+    <div class="nav-inner">
+      <div class="nav-brand">
+        <span class="brand-icon">📚</span>
+        <div class="brand-text">
+          <span class="brand-name">UniLibrary</span>
+          <span class="brand-sub">Knowledge Portal</span>
+        </div>
+      </div>
+      <div class="nav-links">
+        <a href="#hero" class="nav-link active" id="nav-home">Home</a>
+        <a href="#stats-section" class="nav-link" id="nav-stats">Analytics</a>
+        <a href="#catalog-section" class="nav-link" id="nav-catalog">Catalog</a>
+      </div>
+      <div class="nav-badge">
+        <span id="total-badge">— books</span>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ══ HERO ══ -->
+  <section class="hero" id="hero">
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+      <div class="hero-eyebrow">
+        <span class="eyebrow-dot"></span>
+        Web Scraping · books.toscrape.com
+        <span class="eyebrow-dot"></span>
+      </div>
+      <h1 class="hero-title">
+        Discover<br />
+        <span class="hero-title-accent">University Books</span>
+      </h1>
+      <p class="hero-desc">
+        Live-scraped catalog from <strong>Books to Scrape</strong> — search, filter
+        by genre, price & rating, and explore real web data with beautiful analytics.
+      </p>
+      <div class="hero-actions">
+        <button class="btn-primary" onclick="scrollToCatalog()">
+          Browse Catalog
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </button>
+        <button class="btn-secondary" onclick="scrollToStats()">
+          View Analytics
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        </button>
+      </div>
+      <div class="hero-stats">
+        <div class="hs-item"><span class="hs-val" id="hs-total">1000+</span><span class="hs-lbl">Books</span></div>
+        <div class="hs-divider"></div>
+        <div class="hs-item"><span class="hs-val">50</span><span class="hs-lbl">Categories</span></div>
+        <div class="hs-divider"></div>
+        <div class="hs-item"><span class="hs-val">Live</span><span class="hs-lbl">Scraped</span></div>
+      </div>
+    </div>
+    <div class="hero-scroll-hint">
+      <div class="scroll-mouse"><div class="scroll-wheel"></div></div>
+      <span>Scroll to explore</span>
+    </div>
+  </section>
+
+  <!-- ══ STATS SECTION ══ -->
+  <section class="stats-section" id="stats-section">
+    <div class="section-header">
+      <span class="section-eyebrow">Live Analytics</span>
+      <h2 class="section-title">Catalog Insights</h2>
+      <p class="section-desc">Real-time statistics scraped from Books to Scrape</p>
+    </div>
+
+    <div class="stats-grid" id="stats-grid">
+      <div class="stat-card loading" id="stat-avg">
+        <div class="stat-icon">💷</div>
+        <div class="stat-body">
+          <span class="stat-val" id="avg-price">—</span>
+          <span class="stat-lbl">Avg Price</span>
+        </div>
+      </div>
+      <div class="stat-card loading" id="stat-min">
+        <div class="stat-icon">🏷️</div>
+        <div class="stat-body">
+          <span class="stat-val" id="min-price">—</span>
+          <span class="stat-lbl">Lowest Price</span>
+        </div>
+      </div>
+      <div class="stat-card loading" id="stat-max">
+        <div class="stat-icon">💰</div>
+        <div class="stat-body">
+          <span class="stat-val" id="max-price">—</span>
+          <span class="stat-lbl">Highest Price</span>
+        </div>
+      </div>
+      <div class="stat-card loading" id="stat-stock">
+        <div class="stat-icon">✅</div>
+        <div class="stat-body">
+          <span class="stat-val" id="in-stock">—</span>
+          <span class="stat-lbl">In Stock</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Rating Distribution Chart -->
+    <div class="chart-card">
+      <h3 class="chart-title">Rating Distribution</h3>
+      <div class="rating-chart" id="rating-chart">
+        <div class="chart-loading">Loading analytics…</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ CATALOG SECTION ══ -->
+  <section class="catalog-section" id="catalog-section">
+    <div class="section-header">
+      <span class="section-eyebrow">Live Catalog</span>
+      <h2 class="section-title">Browse Books</h2>
+      <p class="section-desc">Scraped in real-time — every card is live data</p>
+    </div>
+
+    <!-- Controls -->
+    <div class="controls-bar">
+      <!-- Search -->
+      <div class="search-wrap">
+        <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        <input type="text" id="search-input" class="search-input" placeholder="Search by title…" />
+        <button class="search-clear" id="search-clear" onclick="clearSearch()">✕</button>
+      </div>
+
+      <!-- Sort -->
+      <select class="control-select" id="sort-select">
+        <option value="">Sort: Default</option>
+        <option value="price_asc">Price: Low → High</option>
+        <option value="price_desc">Price: High → Low</option>
+        <option value="rating_desc">Rating: High → Low</option>
+        <option value="rating_asc">Rating: Low → High</option>
+        <option value="title_asc">Title: A → Z</option>
+        <option value="title_desc">Title: Z → A</option>
+      </select>
+
+      <!-- Min Rating -->
+      <select class="control-select" id="rating-filter">
+        <option value="0">All Ratings</option>
+        <option value="5">⭐⭐⭐⭐⭐ 5 Stars</option>
+        <option value="4">⭐⭐⭐⭐+ 4+ Stars</option>
+        <option value="3">⭐⭐⭐+ 3+ Stars</option>
+        <option value="2">⭐⭐+ 2+ Stars</option>
+      </select>
+
+      <!-- Price Range -->
+      <div class="price-range-wrap">
+        <input type="number" class="price-input" id="min-price-filter" placeholder="£ Min" min="0" step="0.01" />
+        <span class="price-sep">–</span>
+        <input type="number" class="price-input" id="max-price-filter" placeholder="£ Max" min="0" step="0.01" />
+      </div>
+
+      <button class="btn-apply" id="apply-btn" onclick="applyFilters()">Apply Filters</button>
+      <button class="btn-reset" id="reset-btn" onclick="resetFilters()">Reset</button>
+    </div>
+
+    <!-- Category Pills -->
+    <div class="category-bar" id="category-bar">
+      <div class="cat-pills-wrap" id="cat-pills">
+        <button class="cat-pill active" data-url="" onclick="selectCategory(this)">All Books</button>
+        <div class="cat-loading" id="cat-loading">Loading categories…</div>
+      </div>
+    </div>
+
+    <!-- Results Meta -->
+    <div class="results-meta">
+      <span id="results-count">Searching…</span>
+      <div class="view-toggle">
+        <button class="view-btn active" id="view-grid" title="Grid view" onclick="setView('grid')">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+        </button>
+        <button class="view-btn" id="view-list" title="List view" onclick="setView('list')">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><rect x="3" y="5" width="18" height="2"/><rect x="3" y="11" width="18" height="2"/><rect x="3" y="17" width="18" height="2"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Book Grid -->
+    <div class="books-grid" id="books-grid">
+      <!-- Skeleton loaders -->
+      <div class="book-skeleton" id="sk1"></div>
+      <div class="book-skeleton" id="sk2"></div>
+      <div class="book-skeleton" id="sk3"></div>
+      <div class="book-skeleton" id="sk4"></div>
+      <div class="book-skeleton" id="sk5"></div>
+      <div class="book-skeleton" id="sk6"></div>
+      <div class="book-skeleton" id="sk7"></div>
+      <div class="book-skeleton" id="sk8"></div>
+    </div>
+
+    <!-- Pagination -->
+    <div class="pagination" id="pagination"></div>
+  </section>
+
+  <!-- ══ BOOK MODAL ══ -->
+  <div class="modal-overlay" id="modal-overlay" onclick="closeModal()">
+    <div class="modal-card" id="modal-card" onclick="event.stopPropagation()">
+      <button class="modal-close" id="modal-close" onclick="closeModal()">✕</button>
+      <div class="modal-body" id="modal-body">
+        <div class="modal-loading">
+          <div class="spinner"></div>
+          <span>Fetching book details…</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ FOOTER ══ -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <span class="brand-icon">📚</span>
+        <span class="brand-name">UniLibrary</span>
+      </div>
+      <p class="footer-note">
+        Data scraped live from <a href="https://books.toscrape.com" target="_blank" rel="noopener">books.toscrape.com</a>
+        — a sandbox site for web scraping practice.
+      </p>
+      <p class="footer-sub">Built with Python · Flask · BeautifulSoup · Vanilla JS</p>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
